@@ -7,23 +7,28 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Handler
-import android.os.HandlerThread
 import android.os.IBinder
-import android.telephony.PhoneStateListener
+import android.os.Looper
 import kotlin.system.exitProcess
 
 class AudioService : Service(), AudioManager.OnAudioFocusChangeListener {
     private val binder = LocalBinder()
+    
     private var rainPlayer: MediaPlayer? = null
     private var rainVolume: String = "1.0"
+    
     private var birdPlayer: MediaPlayer? = null
     private var birdVolume: String = "1.0"
+    
     private var tentPlayer: MediaPlayer? = null
     private var tentVolume: String = "1.0"
+    
     private var thunderPlayer: MediaPlayer? = null
     private var thunderVolume: String = "1.0"
+    
     private var grassPlayer: MediaPlayer? = null
     private var grassVolume: String = "1.0"
+    
     private var audioManager: AudioManager? = null
     private var wasRainPlaying = false
     private var wasBirdPlaying = false
@@ -31,8 +36,8 @@ class AudioService : Service(), AudioManager.OnAudioFocusChangeListener {
     private var wasThunderPlaying = false
     private var wasGrassPlaying = false
 
-    private  var timer = 0
-    private val handler = Handler()
+    private var timer = 0
+    private val handler = Handler(Looper.getMainLooper())
 
     private var notificationManager: NotificationManager? = null
 
@@ -52,212 +57,213 @@ class AudioService : Service(), AudioManager.OnAudioFocusChangeListener {
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
-        if (focusChange <=0){
+        if (focusChange <= 0) {
             wasRainPlaying = isRainPlaying()
             wasBirdPlaying = isBirdPlaying()
             wasTentPlaying = isTentPlaying()
             wasThunderPlaying = isThunderPlaying()
             wasGrassPlaying = isGrassPlaying()
-            if (isRainPlaying()) rainPlayer?.pause()
-            if (isBirdPlaying()) birdPlayer?.pause()
-            if (isTentPlaying()) tentPlayer?.pause()
-            if (isThunderPlaying()) thunderPlayer?.pause()
-            if (isGrassPlaying()) grassPlayer?.pause()
-          //  deleteNotification()
-        }else{
-            if (wasRainPlaying){
-                rainPlayer?.start()
-                initNotification()
-            }
-            if (wasBirdPlaying){
-                birdPlayer?.start()
-                initNotification()
-            }
-            if (wasTentPlaying){
-                tentPlayer?.start()
-                initNotification()
-            }
-            if (wasThunderPlaying){
-                thunderPlayer?.start()
-                initNotification()
-            }
-            if (wasGrassPlaying){
-                grassPlayer?.start()
-                initNotification()
-            }
+            
+            rainPlayer?.pause()
+            birdPlayer?.pause()
+            tentPlayer?.pause()
+            thunderPlayer?.pause()
+            grassPlayer?.pause()
+        } else {
+            if (wasRainPlaying) { rainPlayer?.start(); initNotification() }
+            if (wasBirdPlaying) { birdPlayer?.start(); initNotification() }
+            if (wasTentPlaying) { tentPlayer?.start(); initNotification() }
+            if (wasThunderPlaying) { thunderPlayer?.start(); initNotification() }
+            if (wasGrassPlaying) { grassPlayer?.start(); initNotification() }
         }
     }
 
     private fun initMediaPlayers() {
-        rainPlayer = MediaPlayer.create(this, R.raw.rain_main)
+        rainPlayer = try { MediaPlayer.create(this, R.raw.rain_main) } catch (e: Exception) { null }
         rainPlayer?.isLooping = true
-        birdPlayer = MediaPlayer.create(this, R.raw.birds_main)
+        
+        birdPlayer = try { MediaPlayer.create(this, R.raw.birds_main) } catch (e: Exception) { null }
         birdPlayer?.isLooping = true
-        tentPlayer = MediaPlayer.create(this, R.raw.rain_on_tent)
+        
+        tentPlayer = try { MediaPlayer.create(this, R.raw.rain_on_tent) } catch (e: Exception) { null }
         tentPlayer?.isLooping = true
-        thunderPlayer = MediaPlayer.create(this, R.raw.thunder)
+        
+        thunderPlayer = try { MediaPlayer.create(this, R.raw.thunder) } catch (e: Exception) { null }
         thunderPlayer?.isLooping = true
-        grassPlayer = MediaPlayer.create(this, R.raw.rain_on_grass)
+        
+        grassPlayer = try { MediaPlayer.create(this, R.raw.rain_on_grass) } catch (e: Exception) { null }
         grassPlayer?.isLooping = true
+        
         createChannel()
     }
 
     fun rainPlayPause() {
-        if (rainPlayer!!.isPlaying) {
-            rainPlayer?.pause()
-           // deleteNotification()
-        } else {
-            rainPlayer?.start()
-            initNotification()
+        val player = rainPlayer
+        if (player != null) {
+            if (player.isPlaying) {
+                player.pause()
+            } else {
+                player.start()
+                initNotification()
+            }
         }
     }
 
     fun birdPlayPause() {
-        if (birdPlayer!!.isPlaying) {
-            birdPlayer?.pause()
-           // deleteNotification()
-        } else {
-            birdPlayer?.start()
-            initNotification()
+        val player = birdPlayer
+        if (player != null) {
+            if (player.isPlaying) {
+                player.pause()
+            } else {
+                player.start()
+                initNotification()
+            }
         }
     }
 
     fun tentPlayPause() {
-        if (tentPlayer!!.isPlaying) {
-            tentPlayer?.pause()
-            //deleteNotification()
-        } else {
-            tentPlayer?.start()
-            initNotification()
+        val player = tentPlayer
+        if (player != null) {
+            if (player.isPlaying) {
+                player.pause()
+            } else {
+                player.start()
+                initNotification()
+            }
         }
     }
+
     fun thunderPlayPause() {
-        if (thunderPlayer!!.isPlaying) {
-            thunderPlayer?.pause()
-            //deleteNotification()
-        } else {
-            thunderPlayer?.start()
-            initNotification()
+        val player = thunderPlayer
+        if (player != null) {
+            if (player.isPlaying) {
+                player.pause()
+            } else {
+                player.start()
+                initNotification()
+            }
         }
     }
+
     fun grassPlayPause() {
-        if (grassPlayer!!.isPlaying) {
-            grassPlayer?.pause()
-           // deleteNotification()
-        } else {
-            grassPlayer?.start()
-            initNotification()
+        val player = grassPlayer
+        if (player != null) {
+            if (player.isPlaying) {
+                player.pause()
+            } else {
+                player.start()
+                initNotification()
+            }
         }
     }
 
-    fun isRainPlaying(): Boolean {
-        return rainPlayer!!.isPlaying
+    fun isRainPlaying(): Boolean = rainPlayer?.isPlaying ?: false
+    fun isBirdPlaying(): Boolean = birdPlayer?.isPlaying ?: false
+    fun isTentPlaying(): Boolean = tentPlayer?.isPlaying ?: false
+    fun isThunderPlaying(): Boolean = thunderPlayer?.isPlaying ?: false
+    fun isGrassPlaying(): Boolean = grassPlayer?.isPlaying ?: false
+
+    fun setRainVolume(value: String) { 
+        val v = value.toFloatOrNull() ?: 1.0f
+        rainPlayer?.setVolume(v, v)
+        rainVolume = value 
+    }
+    fun setBirdVolume(value: String) { 
+        val v = value.toFloatOrNull() ?: 1.0f
+        birdPlayer?.setVolume(v, v)
+        birdVolume = value 
+    }
+    fun setTentVolume(value: String) { 
+        val v = value.toFloatOrNull() ?: 1.0f
+        tentPlayer?.setVolume(v, v)
+        tentVolume = value 
+    }
+    fun setThunderVolume(value: String) { 
+        val v = value.toFloatOrNull() ?: 1.0f
+        thunderPlayer?.setVolume(v, v)
+        thunderVolume = value 
+    }
+    fun setGrassVolume(value: String) { 
+        val v = value.toFloatOrNull() ?: 1.0f
+        grassPlayer?.setVolume(v, v)
+        grassVolume = value 
     }
 
-    fun isBirdPlaying(): Boolean {
-        return birdPlayer!!.isPlaying
-    }
+    fun getRainVolume(): String = rainVolume
+    fun getBirdVolume(): String = birdVolume
+    fun getTentVolume(): String = tentVolume
+    fun getThunderVolume(): String = thunderVolume
+    fun getGrassVolume(): String = grassVolume
 
-    fun isTentPlaying(): Boolean {
-        return tentPlayer!!.isPlaying
-    }
-    fun isThunderPlaying(): Boolean {
-        return thunderPlayer!!.isPlaying
-    }
-    fun isGrassPlaying(): Boolean {
-        return grassPlayer!!.isPlaying
-    }
-
-    fun setRainVolume(value: String) {
-        rainPlayer!!.setVolume(value.toFloat(), value.toFloat())
-        rainVolume = value
-    }
-
-    fun setBirdVolume(value: String) {
-        birdPlayer!!.setVolume(value.toFloat(), value.toFloat())
-        birdVolume = value
-    }
-
-    fun setTentVolume(value: String) {
-        tentPlayer!!.setVolume(value.toFloat(), value.toFloat())
-        tentVolume = value
-    }
-    fun setThunderVolume(value: String) {
-        thunderPlayer!!.setVolume(value.toFloat(), value.toFloat())
-        thunderVolume = value
-    }
-    fun setGrassVolume(value: String) {
-        grassPlayer!!.setVolume(value.toFloat(), value.toFloat())
-        grassVolume = value
-    }
-
-    fun getRainVolume(): String {
-        return rainVolume
-    }
-
-    fun getBirdVolume(): String {
-        return birdVolume
-    }
-
-    fun getTentVolume(): String {
-        return tentVolume
-    }
-    fun getThunderVolume(): String {
-        return thunderVolume
-    }
-    fun getGrassVolume(): String {
-        return grassVolume
-    }
-
-    private fun createChannel(){
+    private fun createChannel() {
+        if (notificationManager == null) {
+            notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        }
         val channel = NotificationChannel("nature", "Nature", NotificationManager.IMPORTANCE_LOW)
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager!!.createNotificationChannel(channel)
-
+        notificationManager?.createNotificationChannel(channel)
     }
 
     private fun initNotification() {
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("", 0)
-        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, intent, 
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
         val notification = Notification.Builder(this, "nature")
-                .setShowWhen(false)
-                .setSmallIcon(android.R.drawable.ic_media_play)
-                .setContentTitle("Playing")
-                .setAutoCancel(false)
-                .setOngoing(true)
-                .setContentIntent(pendingIntent)
-                .build()
-        notificationManager?.notify(0, notification)
+            .setShowWhen(false)
+            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setContentTitle("Relaxo Playing")
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setContentIntent(pendingIntent)
+            .build()
+        notificationManager?.notify(1, notification)
     }
 
-     fun deleteNotification(){
-        if (!isRainPlaying() && !isBirdPlaying() && !isThunderPlaying() && !isTentPlaying() && !isGrassPlaying()){
-            notificationManager?.cancelAll()
+    fun deleteNotification() {
+        if (!isRainPlaying() && !isBirdPlaying() && !isThunderPlaying() && !isTentPlaying() && !isGrassPlaying()) {
+            notificationManager?.cancel(1)
         }
-
     }
 
-    fun setTimer(t: String){
-        timer = t.toInt()
-        handler.post(object : Runnable{
+    fun setTimer(t: String) {
+        timer = t.toIntOrNull() ?: 0
+        handler.removeCallbacksAndMessages(null)
+        handler.post(object : Runnable {
             override fun run() {
-                if (timer > 0){
+                if (timer > 0) {
                     timer--
                     handler.postDelayed(this, 1000)
-                }else{
+                } else {
+                    stopAll()
                     exitProcess(0)
                 }
             }
         })
     }
-
-    fun getTimer(): String{
-        return timer.toString()
+    
+    private fun stopAll() {
+        rainPlayer?.pause()
+        birdPlayer?.pause()
+        tentPlayer?.pause()
+        thunderPlayer?.pause()
+        grassPlayer?.pause()
+        notificationManager?.cancelAll()
     }
 
-    fun cancelTimer(){
+    fun getTimer(): String = timer.toString()
+
+    fun cancelTimer() {
         handler.removeCallbacksAndMessages(null)
     }
 
+    override fun onDestroy() {
+        stopAll()
+        rainPlayer?.release()
+        birdPlayer?.release()
+        tentPlayer?.release()
+        thunderPlayer?.release()
+        grassPlayer?.release()
+        super.onDestroy()
+    }
 }

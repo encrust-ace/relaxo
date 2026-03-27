@@ -31,145 +31,144 @@ class MainActivity : FlutterActivity() {
 
         val messenger = flutterEngine.dartExecutor.binaryMessenger
 
+        // Rain
         MethodChannel(messenger, "rainPlayPause").setMethodCallHandler { call, result ->
-            if (call.method == "rainInit") {
-                if (mService.isRainPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+            if (!mBound) {
+                result.success("paused")
+                return@setMethodCallHandler
             }
-            if (call.method == "rainPlayPause") {
+            if (call.method == "rainInit") {
+                result.success(if (mService.isRainPlaying()) "playing" else "paused")
+            } else if (call.method == "rainPlayPause") {
                 mService.rainPlayPause()
-                if (mService.isRainPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+                result.success(if (mService.isRainPlaying()) "playing" else "paused")
             }
         }
-
         MethodChannel(messenger, "rainVolumeAction").setMethodCallHandler { call, result ->
+            if (!mBound) {
+                result.success("1.0")
+                return@setMethodCallHandler
+            }
             if (call.method == "rainInit") {
                 result.success(mService.getRainVolume())
             } else {
                 mService.setRainVolume(call.method)
+                result.success(call.method)
             }
         }
 
+        // Bird
         MethodChannel(messenger, "birdPlayPause").setMethodCallHandler { call, result ->
-            if (call.method == "birdInit") {
-                if (mService.isBirdPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+            if (!mBound) {
+                result.success("paused")
+                return@setMethodCallHandler
             }
-            if (call.method == "birdPlayPause") {
+            if (call.method == "birdInit") {
+                result.success(if (mService.isBirdPlaying()) "playing" else "paused")
+            } else if (call.method == "birdPlayPause") {
                 mService.birdPlayPause()
-                if (mService.isBirdPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+                result.success(if (mService.isBirdPlaying()) "playing" else "paused")
             }
         }
-
         MethodChannel(messenger, "birdVolumeAction").setMethodCallHandler { call, result ->
+            if (!mBound) {
+                result.success("1.0")
+                return@setMethodCallHandler
+            }
             if (call.method == "birdInit") {
                 result.success(mService.getBirdVolume())
             } else {
                 mService.setBirdVolume(call.method)
+                result.success(call.method)
             }
         }
 
-        //Tent
+        // Tent
         MethodChannel(messenger, "tentPlayPause").setMethodCallHandler { call, result ->
-            if (call.method == "tentInit") {
-                if (mService.isTentPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+            if (!mBound) {
+                result.success("paused")
+                return@setMethodCallHandler
             }
-            if (call.method == "tentPlayPause") {
+            if (call.method == "tentInit") {
+                result.success(if (mService.isTentPlaying()) "playing" else "paused")
+            } else if (call.method == "tentPlayPause") {
                 mService.tentPlayPause()
-                if (mService.isTentPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+                result.success(if (mService.isTentPlaying()) "playing" else "paused")
             }
         }
-
         MethodChannel(messenger, "tentVolumeAction").setMethodCallHandler { call, result ->
+            if (!mBound) {
+                result.success("1.0")
+                return@setMethodCallHandler
+            }
             if (call.method == "tentInit") {
                 result.success(mService.getTentVolume())
             } else {
                 mService.setTentVolume(call.method)
+                result.success(call.method)
             }
         }
 
-        //Thunder
+        // Thunder
         MethodChannel(messenger, "thunderPlayPause").setMethodCallHandler { call, result ->
-            if (call.method == "thunderInit") {
-                if (mService.isThunderPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+            if (!mBound) {
+                result.success("paused")
+                return@setMethodCallHandler
             }
-            if (call.method == "thunderPlayPause") {
+            if (call.method == "thunderInit") {
+                result.success(if (mService.isThunderPlaying()) "playing" else "paused")
+            } else if (call.method == "thunderPlayPause") {
                 mService.thunderPlayPause()
-                if (mService.isThunderPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+                result.success(if (mService.isThunderPlaying()) "playing" else "paused")
             }
         }
-
         MethodChannel(messenger, "thunderVolumeAction").setMethodCallHandler { call, result ->
+            if (!mBound) {
+                result.success("1.0")
+                return@setMethodCallHandler
+            }
             if (call.method == "thunderInit") {
                 result.success(mService.getThunderVolume())
             } else {
                 mService.setThunderVolume(call.method)
+                result.success(call.method)
             }
         }
 
-        //Grass
+        // Grass
         MethodChannel(messenger, "grassPlayPause").setMethodCallHandler { call, result ->
-            if (call.method == "grassInit") {
-                if (mService.isGrassPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+            if (!mBound) {
+                result.success("paused")
+                return@setMethodCallHandler
             }
-            if (call.method == "grassPlayPause") {
+            if (call.method == "grassInit") {
+                result.success(if (mService.isGrassPlaying()) "playing" else "paused")
+            } else if (call.method == "grassPlayPause") {
                 mService.grassPlayPause()
-                if (mService.isGrassPlaying()) {
-                    result.success("playing")
-                } else {
-                    result.success("paused")
-                }
+                result.success(if (mService.isGrassPlaying()) "playing" else "paused")
             }
         }
-
         MethodChannel(messenger, "grassVolumeAction").setMethodCallHandler { call, result ->
+            if (!mBound) {
+                result.success("1.0")
+                return@setMethodCallHandler
+            }
             if (call.method == "grassInit") {
                 result.success(mService.getGrassVolume())
             } else {
                 mService.setGrassVolume(call.method)
+                result.success(call.method)
             }
         }
 
-        //Timer
+        // Timer
         MethodChannel(messenger, "setTimer").setMethodCallHandler { call, result ->
+            if (!mBound) {
+                result.success("0")
+                return@setMethodCallHandler
+            }
             when (call.method) {
-                "0" -> {
-                    result.success(mService.getTimer())
-                }
+                "0" -> result.success(mService.getTimer())
                 "1" -> {
                     mService.cancelTimer()
                     result.success("cancelled")
