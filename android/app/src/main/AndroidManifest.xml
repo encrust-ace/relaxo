@@ -4,7 +4,7 @@
     <application
         android:label="Relaxo"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <service android:name=".AudioService" android:exported="true" android:enabled="true"/>
         <receiver android:name=".NotificationReceiver"/>
         <activity
