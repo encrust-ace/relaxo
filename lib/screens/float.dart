@@ -12,10 +12,10 @@ class CustomFloatButton extends StatefulWidget {
 class _CustomFloatButtonState extends State<CustomFloatButton>
     with SingleTickerProviderStateMixin {
   bool isOpened = false;
-  AnimationController _animationController;
-  Animation<Color> _buttonColor;
-  Animation<double> _animateIcon;
-  Animation<double> _translateButton;
+  late AnimationController _animationController;
+  late Animation<Color?> _buttonColor;
+  late Animation<double> _animateIcon;
+  late Animation<double> _translateButton;
   Curve _curve = Curves.easeOut;
   double _fabHeight = 56.0;
 
@@ -23,7 +23,7 @@ class _CustomFloatButtonState extends State<CustomFloatButton>
   String timerValue = "0";
   bool yes = false;
   IconData timerIcon = Icons.timer;
-  Timer timer;
+  late Timer timer;
 
   Widget mainIcon() {
     if (timerValue == "0") {
